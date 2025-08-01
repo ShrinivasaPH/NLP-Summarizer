@@ -11,6 +11,6 @@ The mission also includes a rover to explore the terrain.
 """
 
 #Generate the summary
-summary = summerizer(text, max_length=0, min_length=25, do_sample=False)
+summary = summerizer(text, max_length=60, min_length=25, do_sample=False)
 
 print("Summary:\n:", summary[0]['summary_text'])

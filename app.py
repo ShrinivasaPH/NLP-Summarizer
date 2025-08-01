@@ -1,5 +1,6 @@
 import streamlit as st
 from transformers import pipeline
+import textwrap
 
 st.set_page_config(page_title="Text Summerizer", layout="wide")
 
