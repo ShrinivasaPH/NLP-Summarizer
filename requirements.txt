@@ -3,3 +3,4 @@ torch
 streamlit
 PyMuPDF
 trafilatura
+streamlit_lottie

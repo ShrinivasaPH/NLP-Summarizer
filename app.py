@@ -3,6 +3,15 @@ from transformers import pipeline
 import textwrap
 import fitz  # PyMuPDF
 import trafilatura
+from streamlit_lottie import st_lottie
+import requests
+
+def load_lottieurl(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
 
 # Set up Streamlit page
 st.set_page_config(page_title="📄 Advanced Text Summarizer", layout="wide")
@@ -49,7 +58,10 @@ with tab1:
     input_text = st.text_area("Enter long text to summarize:", height=300)
     if st.button("Summarize Text"):
         if input_text.strip():
-            with st.spinner("🔄 Summarizing your text..."):
+            with st.spinner("🔄 Summarizing..."):
+                lottie_animation = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_j1adxtyb.json")  # example animation
+                st_lottie(lottie_animation, height=150, key="summarize")
+
                 summary = summarize_long_text(input_text)
             st.subheader("Summary")
             st.success(summary)
