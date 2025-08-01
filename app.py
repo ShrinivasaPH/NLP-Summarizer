@@ -8,7 +8,7 @@ import trafilatura
 st.set_page_config(page_title="📄 Advanced Text Summarizer", layout="wide")
 st.title("🧠 Text Summarizer with PDF & URL Support")
 
-st.image(Robot_image.png)
+st.image("Robot_image.png")
 
 # Load summarizer model
 @st.cache_resource
