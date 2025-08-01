@@ -49,38 +49,44 @@ with tab1:
     input_text = st.text_area("Enter long text to summarize:", height=300)
     if st.button("Summarize Text"):
         if input_text.strip():
-            summary = summarize_long_text(input_text)
+            with st.spinner("🔄 Summarizing your text..."):
+                summary = summarize_long_text(input_text)
             st.subheader("Summary")
             st.success(summary)
         else:
             st.warning("Please enter some text.")
+
 
 # 📁 PDF Upload Tab
 with tab2:
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     if st.button("Summarize PDF"):
         if uploaded_file:
-            pdf_text = extract_text_from_pdf(uploaded_file)
-            summary = summarize_long_text(pdf_text)
+            with st.spinner("🔄 Extracting and summarizing your PDF..."):
+                pdf_text = extract_text_from_pdf(uploaded_file)
+                summary = summarize_long_text(pdf_text)
             st.subheader("Summary")
             st.success(summary)
         else:
             st.warning("Please upload a valid PDF.")
+
 
 # 🌐 URL Input Tab
 with tab3:
     url_input = st.text_input("Enter a URL (e.g., blog or article):")
     if st.button("Summarize URL"):
         if url_input.strip():
-            try:
-                url_text = extract_text_from_url(url_input)
-                if url_text:
-                    summary = summarize_long_text(url_text)
-                    st.subheader("Summary")
-                    st.success(summary)
-                else:
-                    st.error("Could not extract clean text from the URL.")
-            except Exception as e:
-                st.error(f"Error extracting from URL: {e}")
+            with st.spinner("🔄 Summarizing content from the URL..."):
+                try:
+                    url_text = extract_text_from_url(url_input)
+                    if url_text:
+                        summary = summarize_long_text(url_text)
+                        st.subheader("Summary")
+                        st.success(summary)
+                    else:
+                        st.error("Could not extract clean text from the URL.")
+                except Exception as e:
+                    st.error(f"Error extracting from URL: {e}")
         else:
             st.warning("Please enter a valid URL.")
+
