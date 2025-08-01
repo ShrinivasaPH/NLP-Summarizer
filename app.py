@@ -3,15 +3,6 @@ from transformers import pipeline
 import textwrap
 import fitz  # PyMuPDF
 import trafilatura
-from streamlit_lottie import st_lottie
-import requests
-
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
 
 # Set up Streamlit page
 st.set_page_config(page_title="📄 Advanced Text Summarizer", layout="wide")
@@ -58,47 +49,38 @@ with tab1:
     input_text = st.text_area("Enter long text to summarize:", height=300)
     if st.button("Summarize Text"):
         if input_text.strip():
-            with st.spinner("🔄 Summarizing..."):
-                lottie_animation = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_j1adxtyb.json")  # example animation
-                st_lottie(lottie_animation, height=150, key="summarize")
-
-                summary = summarize_long_text(input_text)
+            summary = summarize_long_text(input_text)
             st.subheader("Summary")
             st.success(summary)
         else:
             st.warning("Please enter some text.")
-
 
 # 📁 PDF Upload Tab
 with tab2:
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     if st.button("Summarize PDF"):
         if uploaded_file:
-            with st.spinner("🔄 Extracting and summarizing your PDF..."):
-                pdf_text = extract_text_from_pdf(uploaded_file)
-                summary = summarize_long_text(pdf_text)
+            pdf_text = extract_text_from_pdf(uploaded_file)
+            summary = summarize_long_text(pdf_text)
             st.subheader("Summary")
             st.success(summary)
         else:
             st.warning("Please upload a valid PDF.")
-
 
 # 🌐 URL Input Tab
 with tab3:
     url_input = st.text_input("Enter a URL (e.g., blog or article):")
     if st.button("Summarize URL"):
         if url_input.strip():
-            with st.spinner("🔄 Summarizing content from the URL..."):
-                try:
-                    url_text = extract_text_from_url(url_input)
-                    if url_text:
-                        summary = summarize_long_text(url_text)
-                        st.subheader("Summary")
-                        st.success(summary)
-                    else:
-                        st.error("Could not extract clean text from the URL.")
-                except Exception as e:
-                    st.error(f"Error extracting from URL: {e}")
+            try:
+                url_text = extract_text_from_url(url_input)
+                if url_text:
+                    summary = summarize_long_text(url_text)
+                    st.subheader("Summary")
+                    st.success(summary)
+                else:
+                    st.error("Could not extract clean text from the URL.")
+            except Exception as e:
+                st.error(f"Error extracting from URL: {e}")
         else:
             st.warning("Please enter a valid URL.")
-
