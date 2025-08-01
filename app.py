@@ -3,17 +3,6 @@ from transformers import pipeline
 import textwrap
 import fitz  # PyMuPDF
 import trafilatura
-from streamlit_lottie import st_lottie
-import requests
-
-# Load Lottie animation
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
-
-lottie_animation = load_lottieurl("https://assets4.lottiefiles.com/packages/lf20_j1adxtyb.json")
 
 # Set up Streamlit page
 st.set_page_config(page_title="📄 Advanced Text Summarizer", layout="wide")
@@ -52,7 +41,7 @@ def extract_text_from_url(url):
     downloaded = trafilatura.fetch_url(url)
     return trafilatura.extract(downloaded)
 
-# Tabs
+# User Interface - Tabs for Input Types
 tab1, tab2, tab3 = st.tabs(["📝 Text Input", "📁 PDF Upload", "🌐 URL Input"])
 
 # 📝 Text Input Tab
@@ -60,11 +49,7 @@ with tab1:
     input_text = st.text_area("Enter long text to summarize:", height=300)
     if st.button("Summarize Text"):
         if input_text.strip():
-            lottie_placeholder = st.empty()
-            with st.spinner("🔄 Summarizing..."):
-                lottie_placeholder.lottie(lottie_animation, height=150, key="text_summary")
-                summary = summarize_long_text(input_text)
-            lottie_placeholder.empty()  # remove animation
+            summary = summarize_long_text(input_text)
             st.subheader("Summary")
             st.success(summary)
         else:
@@ -75,12 +60,8 @@ with tab2:
     uploaded_file = st.file_uploader("Upload a PDF file", type="pdf")
     if st.button("Summarize PDF"):
         if uploaded_file:
-            lottie_placeholder = st.empty()
-            with st.spinner("🔄 Extracting and summarizing your PDF..."):
-                lottie_placeholder.lottie(lottie_animation, height=150, key="pdf_summary")
-                pdf_text = extract_text_from_pdf(uploaded_file)
-                summary = summarize_long_text(pdf_text)
-            lottie_placeholder.empty()
+            pdf_text = extract_text_from_pdf(uploaded_file)
+            summary = summarize_long_text(pdf_text)
             st.subheader("Summary")
             st.success(summary)
         else:
@@ -91,21 +72,15 @@ with tab3:
     url_input = st.text_input("Enter a URL (e.g., blog or article):")
     if st.button("Summarize URL"):
         if url_input.strip():
-            lottie_placeholder = st.empty()
-            with st.spinner("🔄 Summarizing content from the URL..."):
-                lottie_placeholder.lottie(lottie_animation, height=150, key="url_summary")
-                try:
-                    url_text = extract_text_from_url(url_input)
-                    if url_text:
-                        summary = summarize_long_text(url_text)
-                        lottie_placeholder.empty()
-                        st.subheader("Summary")
-                        st.success(summary)
-                    else:
-                        lottie_placeholder.empty()
-                        st.error("Could not extract clean text from the URL.")
-                except Exception as e:
-                    lottie_placeholder.empty()
-                    st.error(f"Error extracting from URL: {e}")
+            try:
+                url_text = extract_text_from_url(url_input)
+                if url_text:
+                    summary = summarize_long_text(url_text)
+                    st.subheader("Summary")
+                    st.success(summary)
+                else:
+                    st.error("Could not extract clean text from the URL.")
+            except Exception as e:
+                st.error(f"Error extracting from URL: {e}")
         else:
             st.warning("Please enter a valid URL.")
