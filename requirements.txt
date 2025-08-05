@@ -4,3 +4,4 @@ streamlit
 PyMuPDF
 trafilatura
 streamlit_lottie
+evaluate
